@@ -39,7 +39,7 @@ class Board:
         :param unique_id:
         :return: Character or False
         '''
-        for key, char in self.characters:
+        for key, char in enumerate(self.characters):
                 if char.unique_id == unique_id:
                     return char, key
 
@@ -102,7 +102,9 @@ class Board:
             self.characters[pos].x = x
             self.characters[pos].y = y
 
-        return True
+            return True
+
+        return False
 
 
 
