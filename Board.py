@@ -1,7 +1,7 @@
 from random import randrange
 from Character import Character
 from Constants import *
-
+import json
 
 class Board:
 
@@ -21,17 +21,6 @@ class Board:
 
     def _is_created(self):
         return self.created
-
-    def add_character_to_board(self, character):
-
-        if self.active_characters_count < self.max_characters and not self._has_character_on_game(character.unique_id):
-            self.characters.append(character)
-            self._spawn_character(character, TEAM_GOODGUYS)
-            self.active_characters_count += 1
-
-            return character
-        else:
-            return False
 
 
     def _has_character_on_game(self, unique_id):
@@ -105,6 +94,9 @@ class Board:
             return True
 
         return False
+
+    def to_JSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 
 
