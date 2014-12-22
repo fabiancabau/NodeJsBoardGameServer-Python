@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from gevent import monkey
 from socketio.defaultjson import default_json_dumps
 import Board
@@ -45,7 +46,8 @@ def index():
 
 @socketio.on('new-hero', namespace='')
 def new_hero(data):
-    session['character'] = Character(unique_id=utility._generate_socket_id(), nickname=data.nickname, x=data.x, y=data.y)
+    print(data.get('nickname'))
+    session['character'] = Character(unique_id=utility._generate_socket_id(), nickname=data.get('nickname'), x=data.get('x'), y=data.get('y'))
     session['character'] = server._add_user_to_board(session['character'], TEAM_GOODGUYS)
     print('Client %s connected') % session['character'].unique_id
 
@@ -64,12 +66,12 @@ def new_hero(data):
 
 @socketio.on('hero-move', namespace='')
 def hero_move(data):
-    session['character'].x = data.x
-    session['character'].y = data.y
+    session['character'].x = data.get('x')
+    session['character'].y = data.get('y')
 
     server.board.move_character(session['character'].unique_id, session['character'].x, session['character'].y)
 
-    socketio.emit('hero-update', session['character'])
+    socketio.emit('hero-update', session['character'].to_JSON())
     socketio.emit('move-queue', server._move_queue(session['character'].unique_id))
 
 

@@ -1,4 +1,4 @@
-from random import randrange
+from random import randrange, randint
 from Character import Character
 from Constants import *
 import json
@@ -14,9 +14,11 @@ class Board:
     boardBody = None
 
     def __init__(self, size_x, size_y):
-        self.boardBody = [[None for self.size_y in range(5)] for self.size_x in range(5)]
         self.size_x = size_x
         self.size_y = size_y
+        self.boardBody = [[None for a in range(self.size_y)] for b in range(self.size_x)]
+        print('{0}').format(len(self.boardBody))
+
 
 
     def _is_created(self):
@@ -40,20 +42,22 @@ class Board:
         :return: Tuple(Character, (x,y)) or False
 
         '''
-        for x in range(0, self.size_x):
-            for y in range(0, self.size_y):
-                if isinstance(Character, self.boardBody[x][y]) and self.boardBody[x][y].unique_id == unique_id:
+        for x in range(0, len(self.boardBody)):
+            for y in range(0, len(self.boardBody[x])):
+                if isinstance(self.boardBody[x][y], Character) and self.boardBody[x][y].unique_id == unique_id:
                     return self.boardBody[x][y], dict({'x': x, 'y': y})
         return False
 
     def _is_slot_free(self, x, y):
-        if isinstance(Character, self.boardBody[x][y]):
+        print(self.boardBody)
+        if isinstance(self.boardBody[x][y], Character):
             return False
         else:
             return True
 
 
     def _spawn_character(self, character, side):
+        import math
 
         max_x = 0
         max_y = 0
@@ -73,10 +77,10 @@ class Board:
             min_x = (self.size_x/2) + 1
             min_y = (self.size_y/2) + 1
 
-        rand_x = randrange(max_x, min_x)
-        rand_y = randrange(max_y, min_y)
+        rand_x = randint(math.floor(min_x), math.floor(max_x))
+        rand_y = randint(math.floor(min_y), math.floor(max_y))
 
-        if not self._has_character_on_board(character.unique_id) and self._is_slot_free(rand_x, rand_y):
+        if not self._has_character_on_board(character.unique_id):
             character.x = rand_x
             character.y = rand_y
             self.boardBody[rand_x][rand_y] = character
